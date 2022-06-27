@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/cityName"
+        android:text="Москва"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/cityCoordinates"
+        android:text="34.234234 / 12.019"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/tempValue"
+        android:text="25°С"
+        android:layout_height="wrap_content">
+    </TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/feelsLikeValue"
+        android:text="24°С"
+        android:layout_height="wrap_content">
+    </TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/conditionValue"
+        android:text="Ясно"
+        android:layout_height="wrap_content">
+    </TextView>
+</LinearLayout>
