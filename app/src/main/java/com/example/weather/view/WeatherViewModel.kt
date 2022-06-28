@@ -10,7 +10,7 @@ import com.example.weather.viewmodel.AppState
 class WeatherViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) :
     ViewModel() {
 
-    lateinit var repository: Repository
+    private lateinit var repository: Repository
 
     fun sendRequest() {
 
@@ -25,7 +25,7 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
         if((0..2).random() == 1){
             val ex = IllegalStateException("Что-то пошло не так")
             liveData.postValue(AppState.Error(ex))
-            throw ex;
+            throw ex
         }else{
             liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
         }

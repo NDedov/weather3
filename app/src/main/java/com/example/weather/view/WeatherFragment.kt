@@ -13,13 +13,13 @@ import com.google.android.material.snackbar.Snackbar
 class WeatherFragment: Fragment() {
 
     companion object{
-        fun newInstance() = WeatherFragment();
+        fun newInstance() = WeatherFragment()
     }
 
     private var progressLoadingToShow = true
 
     private lateinit var binding: FragmentWeatherBinding
-    lateinit var viewModel: WeatherViewModel
+    private lateinit var viewModel: WeatherViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,13 +52,13 @@ class WeatherFragment: Fragment() {
         when (appState){
             is AppState.Error -> {
                 Snackbar.make(binding.root, "Ошибка загрузки",Snackbar.LENGTH_LONG)
-                    .setAction("Повторить", View.OnClickListener { sendRequest() })
+                    .setAction("Повторить") { sendRequest() }
                     .setDuration(10000)
                     .show()
             }
             is AppState.Loading -> {
                 if (appState.loadingOver){
-                    progressLoadingToShow = false;
+                    progressLoadingToShow = false
                     binding.loadingProgress.visibility = View.GONE
                 }
                 else{
@@ -77,10 +77,10 @@ class WeatherFragment: Fragment() {
                 val result = appState.weatherData
                 progressLoadingToShow = false
                 binding.cityName.text = result.city.name
-                binding.tempValue.text = result.temp.toString()
-                binding.feelsLikeValue.text = result.feelsLike.toString()
+                binding.tempValue.text = String.format("${result.temp}°C")
+                binding.feelsLikeValue.text = String.format("${result.feelsLike}°C")
                 binding.conditionValue.text = result.condition
-                binding.cityCoordinates.text = "${result.city.lat}/${result.city.lon}"
+                binding.cityCoordinates.text = String.format("${result.city.lat}/${result.city.lon}")
             }
         }
     }

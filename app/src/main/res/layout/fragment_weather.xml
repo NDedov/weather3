@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/cityName"
-        android:text="Москва"
+        android:gravity="center"
+        android:textSize="@dimen/medium_text_size"
+        tools:text="Москва"
         android:layout_height="wrap_content">
     </TextView>
 
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/cityCoordinates"
-        android:text="34.234234 / 12.019"
+        android:gravity="center"
+        android:textSize="@dimen/little_text_size"
+        tools:text="34.234234 / 12.019"
         android:layout_height="wrap_content">
     </TextView>
 
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/tempValue"
-        android:text="25°С"
+        android:gravity="center"
+        android:textSize="@dimen/large_text_size"
+        tools:text="25°С"
         android:layout_height="wrap_content">
     </TextView>
+
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/feelsLikeValue"
-        android:text="24°С"
+        android:gravity="center"
+        tools:text="24°С"
+        android:textSize="@dimen/little_text_size"
         android:layout_height="wrap_content">
     </TextView>
+
     <TextView
         android:layout_width="match_parent"
         android:id="@+id/conditionValue"
-        android:text="Ясно"
+        android:gravity="center"
+        tools:text="Ясно"
+        android:textSize="@dimen/medium_text_size"
         android:layout_height="wrap_content">
     </TextView>
 
@@ -41,10 +54,8 @@
         android:id="@+id/loadingProgress"
         android:max="100"
         android:progress="0"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         />
 </LinearLayout>
