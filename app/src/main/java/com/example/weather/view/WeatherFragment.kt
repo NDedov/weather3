@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.databinding.FragmentWeatherBinding
 import com.example.weather.viewmodel.AppState
+import com.google.android.material.snackbar.Snackbar
 
 class WeatherFragment: Fragment() {
 
@@ -15,7 +17,7 @@ class WeatherFragment: Fragment() {
         fun newInstance() = WeatherFragment();
     }
 
-    lateinit var binding: FragmentWeatherBinding
+    private lateinit var binding: FragmentWeatherBinding
     lateinit var viewModel: WeatherViewModel
 
     override fun onCreateView(
@@ -32,16 +34,29 @@ class WeatherFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel =ViewModelProvider(this).get(WeatherViewModel::class.java)
-        viewModel.liveData.observe(viewLifecycleOwner
+        viewModel.getLiveData().observe(viewLifecycleOwner
         ) { t -> renderData(t) }
-        viewModel.sendRequest()
 
+        try{
+            viewModel.sendRequest()
+        }
+        catch (ex : IllegalStateException){ }
     }
 
     private fun renderData(appState: AppState) {
         when (appState){
-            is AppState.Error -> {/*TODO HW*/ }
-            AppState.Loading -> {/*TODO HW*/}
+            is AppState.Error -> {
+                Snackbar.make(binding.root, "Ошибка загрузки",Snackbar.LENGTH_LONG)
+                    .setAction("Повторить", View.OnClickListener {
+                        try{
+                            viewModel.sendRequest()
+                        }
+                        catch (ex : IllegalStateException){ }
+                    })
+                    .setDuration(8000)
+                    .show()
+            }
+            is AppState.Loading -> {/*TODO HW*/}
             is AppState.Success -> {
                 val result = appState.weatherData
                 binding.cityName.text = result.city.name
