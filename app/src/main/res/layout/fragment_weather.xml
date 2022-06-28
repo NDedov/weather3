@@ -36,4 +36,15 @@
         android:text="Ясно"
         android:layout_height="wrap_content">
     </TextView>
+
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        android:max="100"
+        android:progress="0"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        />
 </LinearLayout>
