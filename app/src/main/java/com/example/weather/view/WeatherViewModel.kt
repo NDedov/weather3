@@ -2,17 +2,16 @@ package com.example.weather.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weather.model.Repository
-import com.example.weather.model.RepositoryLocalImpl
-import com.example.weather.model.RepositoryRemoteImpl
+import com.example.weather.model.*
 import com.example.weather.viewmodel.AppState
 
 class WeatherViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) :
     ViewModel() {
 
-    private lateinit var repository: Repository
+    private lateinit var repositoryMulti: RepositoryMulti
+    private lateinit var repositorySingle: RepositorySingle
 
-    fun sendRequest() {
+    fun sendRequest(location:Location) {
 
         liveData.value = AppState.Loading(loadingOver = false)
 
@@ -27,9 +26,8 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
             liveData.postValue(AppState.Error(ex))
             throw ex
         }else{
-            liveData.postValue(AppState.Success(repository.getWeather(55.755826, 37.617299900000035)))
+            liveData.postValue(AppState.SuccessMulti(repositoryMulti.getListWeather(location)))
         }
-
     }
 
     fun getLiveData():MutableLiveData<AppState>{
@@ -38,11 +36,12 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
     }
 
     private fun choiceRepository(){
-        repository = if (isConnection()) {
+        repositorySingle = if (isConnection()) {
             RepositoryRemoteImpl()
         }else{
             RepositoryLocalImpl()
         }
+        repositoryMulti = RepositoryLocalImpl()
     }
 
     private fun isConnection(): Boolean {
@@ -50,5 +49,4 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
             return false
         return true
     }
-
 }

@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.weather.databinding.FragmentWeatherBinding
+import com.example.weather.databinding.FragmentWeatherListBinding
+import com.example.weather.model.Location
 import com.example.weather.viewmodel.AppState
 import com.google.android.material.snackbar.Snackbar
 
@@ -16,10 +17,11 @@ class WeatherListFragment: Fragment() {
         fun newInstance() = WeatherListFragment()
     }
 
-    private var progressLoadingToShow = true
+    private var progressLoadingToShow = true//флаг для отображения загрузки
+    private var currentLocation:Location = Location.Russian//текущая локация, для перезагрузки
+    private var _binding: FragmentWeatherListBinding?= null
+    private val binding: FragmentWeatherListBinding
 
-    private var _binding: FragmentWeatherBinding?= null
-    private val binding: FragmentWeatherBinding
     get() {
         return _binding!!
     }
@@ -30,7 +32,7 @@ class WeatherListFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =FragmentWeatherBinding.inflate(inflater)
+        _binding =FragmentWeatherListBinding.inflate(inflater)
         return binding.root
     }
 
@@ -44,12 +46,24 @@ class WeatherListFragment: Fragment() {
 
         viewModel =ViewModelProvider(this).get(WeatherViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
-        sendRequest()
+        binding.russianButton.setOnClickListener {
+            currentLocation = Location.Russian
+            sendRequest(currentLocation)
+        }
+        binding.usaButton.setOnClickListener {
+            currentLocation = Location.USA
+            sendRequest(currentLocation)
+        }
+        binding.worldButton.setOnClickListener {
+            currentLocation = Location.World
+            sendRequest(currentLocation)
+        }
+        sendRequest(currentLocation)
     }
 
-    private fun sendRequest() {
+    private fun sendRequest(location: Location) {
         try{
-            viewModel.sendRequest()
+            viewModel.sendRequest(location)
         }
         catch (ex : IllegalStateException){
         }
@@ -59,7 +73,7 @@ class WeatherListFragment: Fragment() {
         when (appState){
             is AppState.Error -> {
                 Snackbar.make(binding.root, "Ошибка загрузки",Snackbar.LENGTH_LONG)
-                    .setAction("Повторить") { sendRequest() }
+                    .setAction("Повторить") { sendRequest(currentLocation) }
                     .setDuration(10000)
                     .show()
             }
@@ -80,15 +94,18 @@ class WeatherListFragment: Fragment() {
                     }.start()
                 }
             }
-            is AppState.Success -> {
-                val result = appState.weatherData
+            is AppState.SuccessMulti -> {
+               // val result = appState.weatherList
                 progressLoadingToShow = false
-                binding.cityName.text = result.city.name
+                binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList)
+
+               /* binding.cityName.text = result.city.name
                 binding.tempValue.text = String.format("${result.temp}°C")
                 binding.feelsLikeValue.text = String.format("${result.feelsLike}°C")
                 binding.conditionValue.text = result.condition
-                binding.cityCoordinates.text = String.format("${result.city.lat}/${result.city.lon}")
+                binding.cityCoordinates.text = String.format("${result.city.lat}/${result.city.lon}")*/
             }
+            is AppState.SuccessSingle -> TODO()
         }
     }
 

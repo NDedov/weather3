@@ -2,7 +2,16 @@ package com.example.weather.model
 
 import com.example.weather.domain.Weather
 
-interface Repository {
-    fun getListWeather():List<Weather>
-    fun getWeather( lat: Double, lon: Double):Weather
+fun interface RepositorySingle {
+    fun getWeather(lat: Double, lon: Double):Weather
+}
+
+fun interface RepositoryMulti {
+    fun getListWeather(location: Location):List<Weather>
+}
+
+sealed class Location{
+    object Russian:Location()
+    object World:Location()
+    object USA: Location()
 }

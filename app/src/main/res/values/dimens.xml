@@ -3,4 +3,8 @@
     <dimen name="medium_text_size">32sp</dimen>
     <dimen name="little_text_size">12sp</dimen>
     <dimen name="large_text_size">48sp</dimen>
+    <dimen name="city_list_name_size">22sp</dimen>
+    <dimen name="recycler_divider_height">0.5dp</dimen>
+    <dimen name="margin_recycler_divider">32dp</dimen>
+    <dimen name="little_margin">4dp</dimen>
 </resources>
