@@ -10,15 +10,19 @@ import com.example.weather.databinding.FragmentWeatherBinding
 import com.example.weather.viewmodel.AppState
 import com.google.android.material.snackbar.Snackbar
 
-class WeatherFragment: Fragment() {
+class WeatherListFragment: Fragment() {
 
     companion object{
-        fun newInstance() = WeatherFragment()
+        fun newInstance() = WeatherListFragment()
     }
 
     private var progressLoadingToShow = true
 
-    private lateinit var binding: FragmentWeatherBinding
+    private var _binding: FragmentWeatherBinding?= null
+    private val binding: FragmentWeatherBinding
+    get() {
+        return _binding!!
+    }
     private lateinit var viewModel: WeatherViewModel
 
     override fun onCreateView(
@@ -26,10 +30,14 @@ class WeatherFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =FragmentWeatherBinding.inflate(inflater)
+        _binding =FragmentWeatherBinding.inflate(inflater)
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,7 +45,6 @@ class WeatherFragment: Fragment() {
         viewModel =ViewModelProvider(this).get(WeatherViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
         sendRequest()
-
     }
 
     private fun sendRequest() {
