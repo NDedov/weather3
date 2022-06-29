@@ -1,5 +1,9 @@
 package com.example.weather.domain
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Weather(
     val city: City = getDefaultCity(),
     val temp: Int = 20,
@@ -10,13 +14,14 @@ data class Weather(
     val windDir: String = "северное",
     val pressure_mm: Int = 854,
     val humidity: Int = 52,
-)
+):Parcelable
 
+@Parcelize
 data class City(
     val name: String,
     val lat: Double,
     val lon: Double
-)
+):Parcelable
 
 fun getWorldCities(): List<Weather> {
     return listOf(

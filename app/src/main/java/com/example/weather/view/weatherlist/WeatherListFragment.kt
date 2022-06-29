@@ -1,4 +1,4 @@
-package com.example.weather.view
+package com.example.weather.view.weatherlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.weather.R
 import com.example.weather.databinding.FragmentWeatherListBinding
+import com.example.weather.domain.Weather
 import com.example.weather.model.Location
+import com.example.weather.utils.SNACK_BAR_LONG_DURATION
+import com.example.weather.view.detailed.OnWeatherListItemClick
+import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.AppState
 import com.google.android.material.snackbar.Snackbar
 
-class WeatherListFragment: Fragment() {
+class WeatherListFragment: Fragment(), OnWeatherListItemClick {
 
     companion object{
         fun newInstance() = WeatherListFragment()
@@ -74,7 +79,7 @@ class WeatherListFragment: Fragment() {
             is AppState.Error -> {
                 Snackbar.make(binding.root, "Ошибка загрузки",Snackbar.LENGTH_LONG)
                     .setAction("Повторить") { sendRequest(currentLocation) }
-                    .setDuration(10000)
+                    .setDuration(SNACK_BAR_LONG_DURATION)
                     .show()
             }
             is AppState.Loading -> {
@@ -95,18 +100,21 @@ class WeatherListFragment: Fragment() {
                 }
             }
             is AppState.SuccessMulti -> {
-               // val result = appState.weatherList
                 progressLoadingToShow = false
-                binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList)
+                binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
 
-               /* binding.cityName.text = result.city.name
-                binding.tempValue.text = String.format("${result.temp}°C")
-                binding.feelsLikeValue.text = String.format("${result.feelsLike}°C")
-                binding.conditionValue.text = result.condition
-                binding.cityCoordinates.text = String.format("${result.city.lat}/${result.city.lon}")*/
             }
             is AppState.SuccessSingle -> TODO()
         }
+    }
+
+    override fun onItemClick(weather: Weather) {
+        requireActivity()
+            .supportFragmentManager
+            .beginTransaction()
+            .hide(this)
+            .add(R.id.container, WeatherDetailedFragment.newInstance(weather)
+        ).addToBackStack("").commit()
     }
 
 
