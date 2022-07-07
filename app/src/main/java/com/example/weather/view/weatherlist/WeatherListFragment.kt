@@ -14,6 +14,7 @@ import com.example.weather.utils.SNACK_BAR_LONG_DURATION
 import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.AppState
+import com.example.weather.viewmodel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class WeatherListFragment: Fragment(), OnWeatherListItemClick {
@@ -22,11 +23,9 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
         fun newInstance() = WeatherListFragment()
     }
 
-    private var progressLoadingToShow = true//флаг для отображения загрузки
     private var currentLocation:Location = Location.Russian//текущая локация, для перезагрузки
     private var _binding: FragmentWeatherListBinding?= null
     private val binding: FragmentWeatherListBinding
-
     get() {
         return _binding!!
     }
@@ -37,7 +36,7 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =FragmentWeatherListBinding.inflate(inflater)
+        _binding = FragmentWeatherListBinding.inflate(inflater)
         return binding.root
     }
 
@@ -49,19 +48,22 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel =ViewModelProvider(this).get(WeatherViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
-        binding.russianButton.setOnClickListener {
-            currentLocation = Location.Russian
-            sendRequest(currentLocation)
-        }
-        binding.usaButton.setOnClickListener {
-            currentLocation = Location.USA
-            sendRequest(currentLocation)
-        }
-        binding.worldButton.setOnClickListener {
-            currentLocation = Location.World
-            sendRequest(currentLocation)
+
+        with (binding){
+            russianButton.setOnClickListener {
+                currentLocation = Location.Russian
+                sendRequest(currentLocation)
+            }
+            usaButton.setOnClickListener {
+                currentLocation = Location.USA
+                sendRequest(currentLocation)
+            }
+            worldButton.setOnClickListener {
+                currentLocation = Location.World
+                sendRequest(currentLocation)
+            }
         }
         sendRequest(currentLocation)
     }
@@ -83,26 +85,13 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
                     .show()
             }
             is AppState.Loading -> {
-                if (appState.loadingOver){
-                    progressLoadingToShow = false
+                if (appState.loadingOver)
                     binding.loadingProgress.visibility = View.GONE
-                }
-                else{
+                else
                     binding.loadingProgress.visibility = View.VISIBLE
-                    Thread{
-                        while (progressLoadingToShow){
-                            binding.loadingProgress.progress++
-                            if (binding.loadingProgress.progress == binding.loadingProgress.max)
-                                binding.loadingProgress.progress = 0
-                            Thread.sleep(5)
-                        }
-                    }.start()
-                }
             }
             is AppState.SuccessMulti -> {
-                progressLoadingToShow = false
                 binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
-
             }
             is AppState.SuccessSingle -> TODO()
         }
@@ -116,6 +105,4 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
             .add(R.id.container, WeatherDetailedFragment.newInstance(weather)
         ).addToBackStack("").commit()
     }
-
-
 }

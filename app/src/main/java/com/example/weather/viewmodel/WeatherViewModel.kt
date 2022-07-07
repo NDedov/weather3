@@ -1,9 +1,8 @@
-package com.example.weather.view.weatherlist
+package com.example.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weather.model.*
-import com.example.weather.viewmodel.AppState
 
 class WeatherViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) :
     ViewModel() {
@@ -15,13 +14,12 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
 
         liveData.value = AppState.Loading(loadingOver = false)
 
-        val threadLoad = Thread{
+        Thread{
             Thread.sleep(2000)
             liveData.postValue(AppState.Loading(loadingOver = true))
-        }
-        threadLoad.start()
+        }.start()
 
-        if((0..2).random() == 1){
+        if ((0..2).random() == 1){
             val ex = IllegalStateException("Что-то пошло не так")
             liveData.postValue(AppState.Error(ex))
             throw ex

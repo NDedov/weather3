@@ -39,21 +39,23 @@ class WeatherDetailedFragment : Fragment() {
     }
 
     private fun renderData(weather: Weather) {
-        binding.cityName.text = weather.city.name
-        binding.tempValue.text = String.format("${weather.temp}°C")
-        binding.feelsLikeValue.text = String.format("${weather.feelsLike}°C")
-        binding.conditionValue.text = weather.condition
-        binding.cityCoordinates.text = String.format("${weather.city.lat}/${weather.city.lon}")
+        with (binding){
+            cityName.text = weather.city.name
+            tempValue.text = String.format("${weather.temp}°C")
+            feelsLikeValue.text = String.format("${weather.feelsLike}°C")
+            conditionValue.text = weather.condition
+            cityCoordinates.text = String.format("${weather.city.lat}/${weather.city.lon}")
+        }
     }
 
     companion object {
         const val BUNDLE_WEATHER_EXTRA = "BUNDLE_WEATHER_EXTRA"
         fun newInstance(weather: Weather): WeatherDetailedFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_WEATHER_EXTRA, weather)
-            val weatherDetailedFragment = WeatherDetailedFragment()
-            weatherDetailedFragment.arguments = bundle
-            return weatherDetailedFragment
+            return WeatherDetailedFragment().also{
+                it.arguments = Bundle().apply{
+                    putParcelable(BUNDLE_WEATHER_EXTRA, weather)
+                }
+            }
         }
     }
 }
