@@ -17,18 +17,18 @@ import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.WeatherViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class WeatherListFragment: Fragment(), OnWeatherListItemClick {
+class WeatherListFragment : Fragment(), OnWeatherListItemClick {
 
-    companion object{
+    companion object {
         fun newInstance() = WeatherListFragment()
     }
 
-    private var currentLocation:Location = Location.Russian//текущая локация, для перезагрузки
-    private var _binding: FragmentWeatherListBinding?= null
+    private var currentLocation: Location = Location.Russian//текущая локация, для перезагрузки
+    private var _binding: FragmentWeatherListBinding? = null
     private val binding: FragmentWeatherListBinding
-    get() {
-        return _binding!!
-    }
+        get() {
+            return _binding!!
+        }
     private lateinit var viewModel: WeatherViewModel
 
     override fun onCreateView(
@@ -51,7 +51,7 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
 
-        with (binding){
+        with(binding) {
             russianButton.setOnClickListener {
                 currentLocation = Location.Russian
                 sendRequest(currentLocation)
@@ -69,20 +69,16 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
     }
 
     private fun sendRequest(location: Location) {
-        try{
+        try {
             viewModel.sendRequest(location)
-        }
-        catch (ex : IllegalStateException){
+        } catch (ex: IllegalStateException) {
         }
     }
 
     private fun renderData(appState: AppState) {
-        when (appState){
+        when (appState) {
             is AppState.Error -> {
-                Snackbar.make(binding.root, "Ошибка загрузки",Snackbar.LENGTH_LONG)
-                    .setAction("Повторить") { sendRequest(currentLocation) }
-                    .setDuration(SNACK_BAR_LONG_DURATION)
-                    .show()
+                binding.root.showSnackBar("Ошибка загрузки")
             }
             is AppState.Loading -> {
                 if (appState.loadingOver)
@@ -91,7 +87,8 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
                     binding.loadingProgress.visibility = View.VISIBLE
             }
             is AppState.SuccessMulti -> {
-                binding.weatherListRecyclerView.adapter = WeatherListAdapter(appState.weatherList, this)
+                binding.weatherListRecyclerView.adapter =
+                    WeatherListAdapter(appState.weatherList, this)
             }
             is AppState.SuccessSingle -> TODO()
         }
@@ -102,7 +99,14 @@ class WeatherListFragment: Fragment(), OnWeatherListItemClick {
             .supportFragmentManager
             .beginTransaction()
             .hide(this)
-            .add(R.id.container, WeatherDetailedFragment.newInstance(weather)
-        ).addToBackStack("").commit()
+            .add(
+                R.id.container, WeatherDetailedFragment.newInstance(weather)
+            ).addToBackStack("").commit()
+    }
+
+    private fun View.showSnackBar(message: String) {
+        Snackbar.make(this, message, SNACK_BAR_LONG_DURATION)
+            .setAction("Повторить") { sendRequest(currentLocation) }
+            .show()
     }
 }
