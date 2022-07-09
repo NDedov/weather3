@@ -15,11 +15,11 @@ class WeatherViewModel(private val liveData: MutableLiveData<AppState> = Mutable
         liveData.value = AppState.Loading(loadingOver = false)
 
         Thread{
-            Thread.sleep(2000)
+            Thread.sleep(500)
             liveData.postValue(AppState.Loading(loadingOver = true))
         }.start()
 
-        if ((0..2).random() == 1){
+        if (false){
             val ex = IllegalStateException("Что-то пошло не так")
             liveData.postValue(AppState.Error(ex))
             throw ex
