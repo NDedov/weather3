@@ -10,12 +10,11 @@ import com.example.weather.R
 import com.example.weather.databinding.FragmentWeatherListBinding
 import com.example.weather.domain.Weather
 import com.example.weather.model.Location
-import com.example.weather.utils.SNACK_BAR_LONG_DURATION
+import com.example.weather.utils.snackBarWithAction
 import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.AppState
 import com.example.weather.viewmodel.WeatherViewModel
-import com.google.android.material.snackbar.Snackbar
 
 class WeatherListFragment : Fragment(), OnWeatherListItemClick {
 
@@ -78,7 +77,8 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Error -> {
-                binding.root.showSnackBar("Ошибка загрузки")
+                binding.root.snackBarWithAction("Ошибка загрузки",
+                    "Повторить", { sendRequest(currentLocation) })
             }
             is AppState.Loading -> {
                 if (appState.loadingOver)
@@ -102,11 +102,5 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
             .add(
                 R.id.container, WeatherDetailedFragment.newInstance(weather)
             ).addToBackStack("").commit()
-    }
-
-    private fun View.showSnackBar(message: String) {
-        Snackbar.make(this, message, SNACK_BAR_LONG_DURATION)
-            .setAction("Повторить") { sendRequest(currentLocation) }
-            .show()
     }
 }

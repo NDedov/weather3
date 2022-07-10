@@ -1,9 +1,15 @@
 package com.example.weather.utils
 
+
 import android.os.Build
+import android.view.View
+import android.widget.TextView
 import androidx.annotation.RequiresApi
+
+import com.google.android.material.snackbar.Snackbar
 import java.io.BufferedReader
 import java.util.stream.Collectors
+
 
 class Utils {
 }
@@ -36,5 +42,19 @@ fun conditionTranslate(stringInput: String): String {
         "thunderstorm-with-hail" -> "гроза с градом"
         else -> stringInput
     }
+}
+
+fun View.snackBarWithAction(
+    message: String,
+    actionText: String,
+    action: (View) -> Unit,
+    duration: Int = Snackbar.LENGTH_INDEFINITE,
+    maxLines: Int = 1
+) {
+    val snackBar = Snackbar.make(this, message, duration)
+        .setAction(actionText, action)
+    val tv = snackBar.view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+    tv.maxLines = maxLines
+    snackBar.show()
 }
 

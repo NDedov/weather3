@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.weather.databinding.FragmentWeatherDetailedBinding
@@ -13,6 +12,7 @@ import com.example.weather.domain.Weather
 import com.example.weather.model.DTO.WeatherDTO
 import com.example.weather.utils.WeatherLoader
 import com.example.weather.utils.conditionTranslate
+import com.example.weather.utils.snackBarWithAction
 
 class WeatherDetailedFragment : Fragment() {
 
@@ -35,10 +35,14 @@ class WeatherDetailedFragment : Fragment() {
             }
         }
 
+        @RequiresApi(Build.VERSION_CODES.N)
         override fun onFailResponse(message: String) {
             requireActivity().runOnUiThread {
-                Toast.makeText(requireContext(), "Ошибка загрузки!\n\n$message", Toast.LENGTH_LONG)
-                    .show()
+                binding.root.snackBarWithAction(
+                    "Ошибка загрузки!\n$message",
+                    "Повторить",
+                    { loadWeather() }, maxLines = 5
+                )
             }
         }
     }
@@ -63,8 +67,13 @@ class WeatherDetailedFragment : Fragment() {
 
         weather = arguments?.getParcelable(BUNDLE_WEATHER_EXTRA)!!
 
-        weather.also { weatherLocal ->
-            WeatherLoader.request(weatherLocal.city.lat, weatherLocal.city.lon, onResponseListener)
+        loadWeather()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun loadWeather() {
+        weather.apply {
+            WeatherLoader.request(city.lat, city.lon, onResponseListener)
         }
     }
 
