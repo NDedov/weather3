@@ -5,7 +5,6 @@ import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-
 import com.google.android.material.snackbar.Snackbar
 import java.io.BufferedReader
 import java.util.stream.Collectors
