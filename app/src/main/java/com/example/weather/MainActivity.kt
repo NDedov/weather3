@@ -14,6 +14,7 @@ import com.example.weather.view.weatherlist.WeatherListFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    lateinit var lostConnectionReceiver: LostConnectionReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,21 +22,29 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        lostConnectionReceiver = LostConnectionReceiver()
 
-        registerReceiver(LostConnectionReceiver(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
+        registerReceiver(
+            lostConnectionReceiver,
+            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE")
+        )
 
         if (savedInstanceState == null)
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.container, WeatherListFragment.newInstance())
                 .commit()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(lostConnectionReceiver)
     }
 }
 
-class LostConnectionReceiver: BroadcastReceiver() {
+class LostConnectionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d("@@@"," MyBroadCastReceiver ${intent!!.action}")
-        Toast.makeText(context,"Изменение параметров соединения!", Toast.LENGTH_SHORT).show()
+        Log.d("@@@", " MyBroadCastReceiver ${intent!!.action}")
+        Toast.makeText(context, "Изменение параметров соединения!", Toast.LENGTH_SHORT).show()
     }
 }
