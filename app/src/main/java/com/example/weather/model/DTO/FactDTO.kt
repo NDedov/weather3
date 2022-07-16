@@ -4,19 +4,19 @@ package com.example.weather.model.DTO
 import com.google.gson.annotations.SerializedName
 
 data class FactDTO(
-    @SerializedName("cloudness")
-    val cloudness: Double,
+/*    @SerializedName("cloudness")
+    val cloudness: Double,*/
     @SerializedName("condition")
     val condition: String,
-    @SerializedName("daytime")
-    val daytime: String,
+/*    @SerializedName("daytime")
+    val daytime: String,*/
     @SerializedName("feels_like")
     val feelsLike: Int,
-    @SerializedName("humidity")
-    val humidity: Int,
+/*    @SerializedName("humidity")
+    val humidity: Int,*/
     @SerializedName("icon")
     val icon: String,
-    @SerializedName("is_thunder")
+/*    @SerializedName("is_thunder")
     val isThunder: Boolean,
     @SerializedName("obs_time")
     val obsTime: Int,
@@ -39,10 +39,10 @@ data class FactDTO(
     @SerializedName("soil_temp")
     val soilTemp: Int,
     @SerializedName("source")
-    val source: String,
+    val source: String,*/
     @SerializedName("temp")
-    val temp: Int,
-    @SerializedName("uptime")
+    val temp: Int
+  /*  @SerializedName("uptime")
     val uptime: Int,
     @SerializedName("uv_index")
     val uvIndex: Int,
@@ -51,5 +51,5 @@ data class FactDTO(
     @SerializedName("wind_gust")
     val windGust: Double,
     @SerializedName("wind_speed")
-    val windSpeed: Double
+    val windSpeed: Double*/
 )

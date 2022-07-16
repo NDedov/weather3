@@ -59,6 +59,6 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
 
     private fun isConnection(): Boolean {
         //TODO сделать проверку
-        return true
+        return false
     }
 }

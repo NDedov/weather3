@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class WeatherDTO(
     @SerializedName("fact")
     val fact: FactDTO,
-    @SerializedName("forecasts")
+/*    @SerializedName("forecasts")
     val forecasts: List<ForecastDTO>,
     @SerializedName("geo_object")
     val geoObject: GeoObjectDTO,
@@ -17,5 +17,5 @@ data class WeatherDTO(
     @SerializedName("now_dt")
     val nowDt: String,
     @SerializedName("yesterday")
-    val yesterday: YesterdayDTO
+    val yesterday: YesterdayDTO*/
 )
