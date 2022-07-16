@@ -5,10 +5,7 @@ import com.example.weather.domain.getRussianCities
 import com.example.weather.domain.getUSACities
 import com.example.weather.domain.getWorldCities
 
-class RepositoryLocalImpl:RepositoryMulti, RepositorySingle {
-    override fun getWeather(lat: Double, lon: Double): Weather {
-        return Weather()
-    }
+class RepositoryLocalImpl:RepositoryMulti {
 
     override fun getListWeather(location: Location): List<Weather> {
         return when (location){

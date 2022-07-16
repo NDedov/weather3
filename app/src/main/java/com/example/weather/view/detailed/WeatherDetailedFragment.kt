@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.weather.databinding.FragmentWeatherDetailedBinding
 import com.example.weather.domain.Weather
-import com.example.weather.model.DTO.WeatherDTO
-import com.example.weather.utils.WeatherLoader
 import com.example.weather.utils.conditionTranslate
-import com.example.weather.utils.snackBarWithAction
+import com.example.weather.viewmodel.detailed.DetailedAppState
+import com.example.weather.viewmodel.detailed.DetailedViewModel
 
 class WeatherDetailedFragment : Fragment() {
 
@@ -22,29 +22,10 @@ class WeatherDetailedFragment : Fragment() {
             return _binding!!
         }
 
-    private lateinit var weather: Weather
+    private lateinit var weatherLocal: Weather
 
-    private val onResponseListener = object : OnResponse {
-        override fun onResponse(weatherDto: WeatherDTO) {
-            requireActivity().runOnUiThread {
-                renderData(weather.apply {
-                    feelsLike = weatherDto.fact.feelsLike
-                    temp = weatherDto.fact.temp
-                    condition = weatherDto.fact.condition
-                })
-            }
-        }
-
-        @RequiresApi(Build.VERSION_CODES.N)
-        override fun onFailResponse(message: String) {
-            requireActivity().runOnUiThread {
-                binding.root.snackBarWithAction(
-                    "Ошибка загрузки!\n$message",
-                    "Повторить",
-                    { loadWeather() }, maxLines = 5
-                )
-            }
-        }
+    private val viewModel by lazy {
+        ViewModelProvider(this).get(DetailedViewModel::class.java)
     }
 
     override fun onDestroy() {
@@ -65,25 +46,36 @@ class WeatherDetailedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        weather = arguments?.getParcelable(BUNDLE_WEATHER_EXTRA)!!
-
-        loadWeather()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun loadWeather() {
-        weather.apply {
-            WeatherLoader.request(city.lat, city.lon, onResponseListener)
+        val weather = arguments?.let { arg ->
+            arg.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA)
         }
+
+        weather?.let { weatherLocal ->
+            this.weatherLocal = weatherLocal
+            viewModel.getWeather(weatherLocal.city.lat, weatherLocal.city.lon)
+            viewModel.getLiveData().observe(viewLifecycleOwner) {
+                renderData(it)
+            }
+        }
+
     }
 
-    private fun renderData(weather: Weather) {
-        with(binding) {
-            cityName.text = weather.city.name
-            tempValue.text = String.format("${weather.temp}°C")
-            feelsLikeValue.text = String.format("${weather.feelsLike}°C")
-            conditionValue.text = conditionTranslate(weather.condition)
-            cityCoordinates.text = String.format("${weather.city.lat}/${weather.city.lon}")
+
+    private fun renderData(detailedAppState: DetailedAppState) {
+        when (detailedAppState) {
+            is DetailedAppState.Loading -> {}
+            is DetailedAppState.Error -> {}
+            is DetailedAppState.Success -> {
+                with(binding) {
+                    val weatherDTO = detailedAppState.weather
+                    cityName.text = weatherLocal.city.name
+                    tempValue.text = String.format("${weatherDTO.fact.temp}°C")
+                    feelsLikeValue.text = String.format("${weatherDTO.fact.feelsLike}°C")
+                    conditionValue.text = conditionTranslate(weatherDTO.fact.condition)
+                    cityCoordinates.text =
+                        String.format("${weatherLocal.city.lat}/${weatherLocal.city.lon}")
+                }
+            }
         }
     }
 

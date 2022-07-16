@@ -13,8 +13,8 @@ import com.example.weather.model.Location
 import com.example.weather.utils.snackBarWithAction
 import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
-import com.example.weather.viewmodel.AppState
-import com.example.weather.viewmodel.WeatherViewModel
+import com.example.weather.viewmodel.citylist.CityListAppState
+import com.example.weather.viewmodel.citylist.CityListViewModel
 
 class WeatherListFragment : Fragment(), OnWeatherListItemClick {
 
@@ -28,7 +28,7 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
         get() {
             return _binding!!
         }
-    private lateinit var viewModel: WeatherViewModel
+    private lateinit var viewModel: CityListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,7 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
 
         with(binding) {
@@ -74,23 +74,22 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
         }
     }
 
-    private fun renderData(appState: AppState) {
+    private fun renderData(appState: CityListAppState) {
         when (appState) {
-            is AppState.Error -> {
+            is CityListAppState.Error -> {
                 binding.root.snackBarWithAction("Ошибка загрузки",
                     "Повторить", { sendRequest(currentLocation) })
             }
-            is AppState.Loading -> {
+            is CityListAppState.Loading -> {
                 if (appState.loadingOver)
                     binding.loadingProgress.visibility = View.GONE
                 else
                     binding.loadingProgress.visibility = View.VISIBLE
             }
-            is AppState.SuccessMulti -> {
+            is CityListAppState.SuccessMulti -> {
                 binding.weatherListRecyclerView.adapter =
                     WeatherListAdapter(appState.weatherList, this)
             }
-            is AppState.SuccessSingle -> TODO()
         }
     }
 
