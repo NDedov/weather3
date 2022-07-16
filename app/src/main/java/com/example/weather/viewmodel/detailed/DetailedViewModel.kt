@@ -43,7 +43,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
         repository = if (!isConnection()) {
             RepositoryDetailedLocalImpl()
         } else {
-            when (5) {
+            when (2) {
                 1 -> {
                     RepositoryDetailedOkHttpImpl()
                 }
@@ -59,6 +59,6 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
 
     private fun isConnection(): Boolean {
         //TODO сделать проверку
-        return false
+        return true
     }
 }
