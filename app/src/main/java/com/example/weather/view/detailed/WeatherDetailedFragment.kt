@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weather.databinding.FragmentWeatherDetailedBinding
 import com.example.weather.domain.Weather
 import com.example.weather.utils.conditionTranslate
+import com.example.weather.utils.snackBarWithAction
 import com.example.weather.viewmodel.detailed.DetailedAppState
 import com.example.weather.viewmodel.detailed.DetailedViewModel
 
@@ -64,7 +65,11 @@ class WeatherDetailedFragment : Fragment() {
     private fun renderData(detailedAppState: DetailedAppState) {
         when (detailedAppState) {
             is DetailedAppState.Loading -> {}
-            is DetailedAppState.Error -> {}
+            is DetailedAppState.Error -> {
+                binding.root.snackBarWithAction(detailedAppState.error.message.toString(),"Повторить",{
+                    viewModel.getWeather(weatherLocal.city.lat, weatherLocal.city.lon)
+                }, maxLines = 5)
+            }
             is DetailedAppState.Success -> {
                 with(binding) {
                     val weatherDTO = detailedAppState.weather
