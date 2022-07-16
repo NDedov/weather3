@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weather.model.*
 import com.example.weather.model.DTO.WeatherDTO
+import com.example.weather.model.retrofit.RepositoryDetailedRetrofitImpl
 import java.io.IOException
-import java.lang.RuntimeException
 
 class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> = MutableLiveData<DetailedAppState>()) :
     ViewModel() {
@@ -43,7 +43,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
         repository = if (!isConnection()) {
             RepositoryDetailedLocalImpl()
         } else {
-            when (1) {
+            when (2) {
                 1 -> {
                     RepositoryDetailedOkHttpImpl()
                 }
