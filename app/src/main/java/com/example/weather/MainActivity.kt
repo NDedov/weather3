@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(R.id.container, WeatherListFragment.newInstance())
                 .commit()
+
     }
 
     override fun onDestroy() {
