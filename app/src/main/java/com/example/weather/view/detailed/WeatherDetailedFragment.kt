@@ -32,7 +32,7 @@ class WeatherDetailedFragment : Fragment() {
             return _binding!!
         }
 
-    private lateinit var weatherLocal: Weather
+  private var weather: Weather?=null
 
     private val viewModel by lazy {
         ViewModelProvider(this).get(DetailedViewModel::class.java)
@@ -56,43 +56,44 @@ class WeatherDetailedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val weather = arguments?.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA)
+        weather = arguments?.getParcelable(BUNDLE_WEATHER_EXTRA)
 
-        weather?.let { weatherLocal ->
-            this.weatherLocal = weatherLocal
-            viewModel.getWeather(weatherLocal.city.lat, weatherLocal.city.lon)
+        weather?.let {
             viewModel.getLiveData().observe(viewLifecycleOwner) {
                 renderData(it)
             }
+            viewModel.getWeather(it.city)
         }
-
     }
 
     private fun renderData(detailedAppState: DetailedAppState) {
+
+
         when (detailedAppState) {
             is DetailedAppState.Loading -> {
                 binding.imageCondition.loadGif(R.drawable.loading2)
             }
             is DetailedAppState.Error -> {
+
                 binding.root.snackBarWithAction(
                     detailedAppState.error.message.toString(),
                     "Повторить",
                     {
-                        viewModel.getWeather(weatherLocal.city.lat, weatherLocal.city.lon)
+                        weather?.let { it1 -> viewModel.getWeather(it1.city) }
                     },
                     maxLines = 5
                 )
             }
             is DetailedAppState.Success -> {
                 with(binding) {
-                    val weatherDTO = detailedAppState.weather
-                    cityName.text = weatherLocal.city.name
-                    tempValue.text = String.format("${weatherDTO.fact.temp}°C")
-                    feelsLikeValue.text = String.format("${weatherDTO.fact.feelsLike}°C")
-                    conditionValue.text = conditionTranslate(weatherDTO.fact.condition)
+                    val weather = detailedAppState.weather
+                    cityName.text = weather.city.name
+                    tempValue.text = String.format("${weather.temp}°C")
+                    feelsLikeValue.text = String.format("${weather.feelsLike}°C")
+                    conditionValue.text = conditionTranslate(weather.condition)
                     cityCoordinates.text =
-                        String.format("${weatherLocal.city.lat}/${weatherLocal.city.lon}")
-                    imageCondition.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weatherDTO.fact.icon}.svg")
+                        String.format("${weather.city.lat}/${weather.city.lon}")
+                    imageCondition.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
                 }
             }
         }

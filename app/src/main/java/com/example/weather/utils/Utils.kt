@@ -5,12 +5,23 @@ import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import com.example.weather.domain.City
+import com.example.weather.domain.Weather
+import com.example.weather.model.DTO.FactDTO
+import com.example.weather.model.DTO.WeatherDTO
 import com.google.android.material.snackbar.Snackbar
 import java.io.BufferedReader
 import java.util.stream.Collectors
 
 
-class Utils {
+fun bindDTOWithCity(weatherDTO: WeatherDTO, city: City): Weather {
+    val fact: FactDTO = weatherDTO.fact
+    return (Weather(city, fact.temp, fact.feelsLike, icon = fact.icon, condition = fact.condition))
+}
+
+private fun convertModelToDto(weather: Weather): WeatherDTO {
+    val fact: FactDTO = FactDTO(weather.condition, weather.feelsLike, "", weather.temp)
+    return WeatherDTO(fact)
 }
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -52,7 +63,8 @@ fun View.snackBarWithAction(
 ) {
     val snackBar = Snackbar.make(this, message, duration)
         .setAction(actionText, action)
-    val tv = snackBar.view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+    val tv =
+        snackBar.view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
     tv.maxLines = maxLines
     snackBar.show()
 }

@@ -1,7 +1,7 @@
 package com.example.weather.model
 
+import com.example.weather.domain.City
 import com.example.weather.domain.Weather
-import com.example.weather.model.DTO.WeatherDTO
 import java.io.IOException
 
 
@@ -9,14 +9,27 @@ fun interface RepositoryMulti {
     fun getListWeather(location: Location):List<Weather>
 }
 
-fun interface RepositoryDetailed {
-    fun getWeather(lat: Double, lon: Double, callback: RepositoryCommonCallback)
+fun interface RepositoryWeatherAvailable {
+    fun getWeatherAll(callback: CommonListWeatherCallback)
 }
 
-interface RepositoryCommonCallback{
-    fun onResponse(weatherDTO: WeatherDTO)
+interface CommonWeatherCallback{
+    fun onResponse(weather: Weather)
     fun onFailure(e: IOException)
     fun onError (message: String)
+}
+
+interface CommonListWeatherCallback{
+    fun onResponse(weatherList: List<Weather>)
+    fun onFailure(e: IOException)
+}
+
+fun interface RepositoryWeatherByCity {
+    fun getWeather(city: City, callback: CommonWeatherCallback)
+}
+
+fun interface RepositoryWeatherSave {
+    fun addWeather(weather: Weather)
 }
 
 sealed class Location{
@@ -24,3 +37,5 @@ sealed class Location{
     object World:Location()
     object USA: Location()
 }
+
+

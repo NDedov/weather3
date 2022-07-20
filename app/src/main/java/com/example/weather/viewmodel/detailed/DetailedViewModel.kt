@@ -2,37 +2,18 @@ package com.example.weather.viewmodel.detailed
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weather.domain.City
+import com.example.weather.domain.Weather
 import com.example.weather.model.*
-import com.example.weather.model.DTO.WeatherDTO
 import com.example.weather.model.retrofit.RepositoryDetailedRetrofitImpl
 import java.io.IOException
 
 class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> = MutableLiveData<DetailedAppState>()) :
     ViewModel() {
 
-    private lateinit var repository: RepositoryDetailed
 
-
-    fun getWeather(lat: Double, lon: Double) {
-        choiceRepository()
-        liveData.value = DetailedAppState.Loading
-        repository.getWeather(lat, lon, callback)
-    }
-
-    private val callback = object : RepositoryCommonCallback {
-        override fun onResponse(weatherDTO: WeatherDTO) {
-            liveData.postValue(DetailedAppState.Success(weatherDTO))
-        }
-
-        override fun onFailure(e: IOException) {
-            liveData.postValue(DetailedAppState.Error(e))
-        }
-
-        override fun onError(message: String) {
-            liveData.postValue(DetailedAppState.Error(RuntimeException(message)))
-        }
-
-    }
+    lateinit var repositoryLocationToWeather: RepositoryWeatherByCity
+    lateinit var repositoryWeatherAddable: RepositoryWeatherSave
 
     fun getLiveData(): MutableLiveData<DetailedAppState> {
         choiceRepository()
@@ -40,25 +21,87 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
     }
 
     private fun choiceRepository() {
-        repository = if (!isConnection()) {
-            RepositoryDetailedLocalImpl()
-        } else {
-            when (2) {
+
+        if (isConnection()) {
+            repositoryLocationToWeather = when (2) {
                 1 -> {
                     RepositoryDetailedOkHttpImpl()
                 }
                 2 -> {
                     RepositoryDetailedRetrofitImpl()
                 }
-                else -> {
+                3 -> {
                     RepositoryDetailedWeatherLoaderImpl()
+                }
+                4 -> {
+                    RepositoryRoomImpl()
+                }
+                else -> {
+                    RepositoryDetailedLocalImpl()
+                }
+            }
+
+            repositoryWeatherAddable = when (0) {
+                1 -> {
+                    RepositoryRoomImpl()
+                }
+                else -> {
+                    RepositoryRoomImpl()
+                }
+            }
+        } else {
+            repositoryLocationToWeather = when (1) {
+                1 -> {
+                    RepositoryRoomImpl()
+                }
+                2 -> {
+                    RepositoryDetailedLocalImpl()
+                }
+                else -> {
+                    RepositoryDetailedLocalImpl()
+                }
+            }
+            repositoryWeatherAddable = when (0) {
+                1 -> {
+                    RepositoryRoomImpl()
+                }
+                else -> {
+                    RepositoryRoomImpl()
                 }
             }
         }
+
+
     }
 
-    private fun isConnection(): Boolean {
-        //TODO сделать проверку
+
+    fun getWeather(city: City) {
+        liveData.value = DetailedAppState.Loading
+        repositoryLocationToWeather.getWeather(city, callback)
+    }
+
+    private val callback = object : CommonWeatherCallback {
+        override fun onResponse(weather: Weather) {
+            if (isConnection())
+                repositoryWeatherAddable.addWeather(weather)
+            liveData.postValue(DetailedAppState.Success(weather))
+        }
+
+        override fun onFailure(e: IOException) {
+            liveData.postValue(DetailedAppState.Error(e))
+        }
+
+        override fun onError(message: String) {
+            TODO("Not yet implemented")
+        }
+    }
+
+
+    private fun isConnection(): Boolean {// TODO HW реализация
         return true
+    }
+
+    override fun onCleared() {
+        super.onCleared()
     }
 }

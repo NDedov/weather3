@@ -3,4 +3,5 @@
     <string name="russia_button_text">Россия</string>
     <string name="usa_button_text">США</string>
     <string name="world_button_text">Весь мир</string>
+    <string name="history">История</string>
 </resources>

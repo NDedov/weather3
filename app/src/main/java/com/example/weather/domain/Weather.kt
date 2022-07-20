@@ -14,6 +14,7 @@ data class Weather(
     val windDir: String = "северное",
     val pressure_mm: Int = 854,
     val humidity: Int = 52,
+    var icon: String="ovc_-ra"
 ):Parcelable
 
 @Parcelize
