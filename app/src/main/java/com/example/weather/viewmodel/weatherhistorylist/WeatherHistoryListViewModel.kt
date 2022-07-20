@@ -27,7 +27,10 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
     fun getAllHistory() {
         //choiceRepository()
         liveData.value = WeatherHistoryListFragmentAppState.Loading
-        repository.getWeatherAll(callback)
+        Thread{
+            repository.getWeatherAll(callback)
+        }.start()
+
     }
 
     private val callback = object : CommonListWeatherCallback {

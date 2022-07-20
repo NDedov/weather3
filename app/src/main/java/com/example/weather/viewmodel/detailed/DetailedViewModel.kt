@@ -70,10 +70,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
                 }
             }
         }
-
-
     }
-
 
     fun getWeather(city: City) {
         liveData.value = DetailedAppState.Loading
@@ -82,8 +79,11 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
 
     private val callback = object : CommonWeatherCallback {
         override fun onResponse(weather: Weather) {
-            if (isConnection())
-                repositoryWeatherAddable.addWeather(weather)
+            if (isConnection()){
+                Thread{
+                    repositoryWeatherAddable.addWeather(weather)
+                }.start()
+            }
             liveData.postValue(DetailedAppState.Success(weather))
         }
 
