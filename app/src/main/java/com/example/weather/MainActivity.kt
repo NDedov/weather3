@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.databinding.ActivityMainBinding
-import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.view.history.WeatherHistoryListFragment
 import com.example.weather.view.weatherlist.WeatherListFragment
 

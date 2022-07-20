@@ -1,7 +1,11 @@
 package com.example.weather.viewmodel.detailed
 
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weather.WeatherApp
 import com.example.weather.domain.City
 import com.example.weather.domain.Weather
 import com.example.weather.model.*
@@ -50,7 +54,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
                 }
             }
         } else {
-            repositoryLocationToWeather = when (1) {
+            repositoryLocationToWeather = when (2) {
                 1 -> {
                     RepositoryRoomImpl()
                 }
@@ -97,8 +101,15 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
     }
 
 
-    private fun isConnection(): Boolean {// TODO HW реализация
-        return true
+    private fun isConnection(): Boolean {
+        val connectivityManager = WeatherApp.getMyApp().getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return when {
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
     }
 
     override fun onCleared() {
