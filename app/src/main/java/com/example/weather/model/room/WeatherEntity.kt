@@ -12,6 +12,7 @@ data class WeatherEntity(
     val lat: Double,
     val lon: Double,
     var temperature: Int,
-    var feelsLike: Int
+    var feelsLike: Int,
+    val dateTime: Long
 )
 

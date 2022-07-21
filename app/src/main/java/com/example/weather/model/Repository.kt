@@ -9,8 +9,10 @@ fun interface RepositoryMulti {
     fun getListWeather(location: Location):List<Weather>
 }
 
-fun interface RepositoryWeatherAvailable {
+interface RepositoryWeatherAvailable {
     fun getWeatherAll(callback: CommonListWeatherCallback)
+    fun deleteHistoryByWeather(weather: Weather, callback: CommonListWeatherCallback)
+
 }
 
 interface CommonWeatherCallback{
@@ -22,6 +24,7 @@ interface CommonWeatherCallback{
 interface CommonListWeatherCallback{
     fun onResponse(weatherList: List<Weather>)
     fun onFailure(e: IOException)
+    fun onDelete(num: Int)
 }
 
 fun interface RepositoryWeatherByCity {

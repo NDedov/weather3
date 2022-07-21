@@ -12,7 +12,6 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
     ViewModel() {
 
     lateinit var repository: RepositoryWeatherAvailable
-    //lateinit var repositoryOne: RepositoryOne
 
     fun getLiveData(): MutableLiveData<WeatherHistoryListFragmentAppState> {
         choiceRepository()
@@ -23,14 +22,17 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
         repository = RepositoryRoomImpl()
     }
 
-
     fun getAllHistory() {
-        //choiceRepository()
         liveData.value = WeatherHistoryListFragmentAppState.Loading
-        Thread{
+        Thread {
             repository.getWeatherAll(callback)
         }.start()
+    }
 
+    fun deleteHistoryByCity(weather: Weather) {
+        Thread {
+            repository.deleteHistoryByWeather(weather, callback)
+        }.start()
     }
 
     private val callback = object : CommonListWeatherCallback {
@@ -40,6 +42,10 @@ class WeatherHistoryListViewModel(private val liveData: MutableLiveData<WeatherH
 
         override fun onFailure(e: IOException) {
             liveData.postValue(WeatherHistoryListFragmentAppState.Error(e))
+        }
+
+        override fun onDelete(num: Int) {
+            liveData.postValue(WeatherHistoryListFragmentAppState.SuccessDelete(num))
         }
     }
 

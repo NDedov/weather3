@@ -23,6 +23,9 @@ interface WeatherDAO {
     @Query("SELECT * FROM weather_entity_table")
     fun getWeatherAll():List<WeatherEntity>
 
+    @Query("DELETE FROM weather_entity_table WHERE dateTime=:mDateTime")
+    fun deleteByTime(mDateTime:Long): Int
+
     // CRUD
     // INSERT INTO table_name (key1,key2) VALUES(value1,value2)
     // SELECT * FROM table_name WHERE key1=1

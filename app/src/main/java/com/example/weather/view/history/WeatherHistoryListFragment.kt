@@ -9,18 +9,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentWeatherHistoryListBinding
 import com.example.weather.domain.Weather
-import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.weatherhistorylist.WeatherHistoryListFragmentAppState
 import com.example.weather.viewmodel.weatherhistorylist.WeatherHistoryListViewModel
 
-class WeatherHistoryListFragment : Fragment(), OnWeatherListItemClick {
+class WeatherHistoryListFragment : Fragment(), OnWeatherHistoryClick {
 
     companion object {
         fun newInstance() = WeatherHistoryListFragment()
     }
-
-    var isRussian = true
 
     private var _binding: FragmentWeatherHistoryListBinding? = null
     private val binding: FragmentWeatherHistoryListBinding
@@ -45,6 +42,7 @@ class WeatherHistoryListFragment : Fragment(), OnWeatherListItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this).get(WeatherHistoryListViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner) { t -> renderData(t) }
         viewModel.getAllHistory()
@@ -60,7 +58,14 @@ class WeatherHistoryListFragment : Fragment(), OnWeatherListItemClick {
                 binding.historyFragmentRecyclerView.adapter =
                     WeatherHistoryListAdapter(weatherHistoryListFragmentAppState.weatherList, this)
             }
+            is WeatherHistoryListFragmentAppState.SuccessDelete -> {
+                viewModel.getAllHistory()
+            }
         }
+    }
+
+    override fun onDeleteClick(weather: Weather) {
+        viewModel.deleteHistoryByCity(weather)
     }
 
     override fun onItemClick(weather: Weather) {
