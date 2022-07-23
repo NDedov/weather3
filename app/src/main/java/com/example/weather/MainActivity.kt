@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.databinding.ActivityMainBinding
+import com.example.weather.view.contentprovider.ContentProviderFragment
 import com.example.weather.view.history.WeatherHistoryListFragment
 import com.example.weather.view.weatherlist.WeatherListFragment
 
@@ -57,10 +58,20 @@ class MainActivity : AppCompatActivity() {
                     beginTransaction()
                         .replace(
                         R.id.container, WeatherHistoryListFragment()
-                    ).addToBackStack("").commit()
+                    ).addToBackStack("").commitAllowingStateLoss()
                 }
                 true
             }
+            R.id.menu_contacts -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(
+                            R.id.container, ContentProviderFragment()
+                        ).addToBackStack("").commitAllowingStateLoss()
+                }
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

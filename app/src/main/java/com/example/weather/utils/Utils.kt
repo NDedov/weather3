@@ -1,10 +1,12 @@
 package com.example.weather.utils
 
 
+import android.content.Context
 import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import com.example.weather.domain.City
 import com.example.weather.domain.Weather
 import com.example.weather.model.DTO.FactDTO
@@ -20,7 +22,7 @@ fun bindDTOWithCity(weatherDTO: WeatherDTO, city: City): Weather {
 }
 
 private fun convertModelToDto(weather: Weather): WeatherDTO {
-    val fact: FactDTO = FactDTO(weather.condition, weather.feelsLike, "", weather.temp)
+    val fact = FactDTO(weather.condition, weather.feelsLike, "", weather.temp)
     return WeatherDTO(fact)
 }
 
@@ -68,4 +70,24 @@ fun View.snackBarWithAction(
     tv.maxLines = maxLines
     snackBar.show()
 }
+
+fun Context.alertDialogPositiveAction(
+    title: String,
+    message: String,
+    positiveMessage: String,
+    positiveAction: ()->Unit,
+    negativeMessage: String,
+    ) {
+    AlertDialog.Builder(this).apply {
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton(positiveMessage) {_,_ -> positiveAction.invoke()}
+        setNegativeButton(negativeMessage) {dialog, _ -> dialog.dismiss() }
+        create()
+        show()
+    }
+}
+
+
+
 
