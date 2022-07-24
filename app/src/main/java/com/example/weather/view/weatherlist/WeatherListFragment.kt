@@ -1,10 +1,16 @@
 package com.example.weather.view.weatherlist
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
@@ -16,6 +22,8 @@ import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.citylist.CityListAppState
 import com.example.weather.viewmodel.citylist.CityListViewModel
+
+const val REQUEST_CODE_LOCATION = 997
 
 class WeatherListFragment : Fragment(), OnWeatherListItemClick {
 
@@ -57,6 +65,11 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
             russianButton.setOnClickListener { processLocationButtonClick(Location.Russian) }
             usaButton.setOnClickListener { processLocationButtonClick(Location.USA) }
             worldButton.setOnClickListener { processLocationButtonClick(Location.World) }
+            userLocationWeatherFAB.setOnClickListener {
+                checkPermissionCommon(Manifest.permission.ACCESS_FINE_LOCATION) {
+                    getUserLocation()
+                }
+            }
         }
         sendRequest(currentLocation)
     }
@@ -123,5 +136,64 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
             .add(
                 R.id.container, WeatherDetailedFragment.newInstance(weather)
             ).addToBackStack("").commit()
+    }
+
+    private fun getUserLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val locationManager =
+                requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    2000L,
+                    0F
+                ) { location -> Log.d("@@@", "${location.latitude} ${location.longitude}") }
+            }
+        }
+    }
+
+
+    private fun permissionRequest(permission: String) {
+        requestPermissions(arrayOf(permission), REQUEST_CODE_LOCATION)
+    }
+
+    private fun checkPermissionCommon(permission: String, action: () -> Unit) {
+        val permResult =
+            ContextCompat.checkSelfPermission(requireContext(), permission)
+        if (permResult == PackageManager.PERMISSION_GRANTED) {
+            action.invoke()
+        } else if (shouldShowRequestPermissionRationale(permission)) {
+            context?.alertDialogPositiveAction(
+                getString(R.string.location_permission_title_text),
+                getString(R.string.location_permission_message),
+                getString(R.string.permission_positive_text),
+                { permissionRequest(permission) },
+                getString(R.string.permission_negative_text)
+            )
+        } else {
+            permissionRequest(permission)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_CODE_LOCATION) {
+            for (pIndex in permissions.indices) {
+                if (permissions[pIndex] == Manifest.permission.ACCESS_FINE_LOCATION
+                    && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    getUserLocation()
+                    Log.d("@@@", "Ура")
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

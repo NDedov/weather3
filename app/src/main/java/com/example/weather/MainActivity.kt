@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.databinding.ActivityMainBinding
+import com.example.weather.utils.CONTENT_PROVIDER_FRAGMENT_TAG
 import com.example.weather.view.contentprovider.ContentProviderFragment
 import com.example.weather.view.history.WeatherHistoryListFragment
 import com.example.weather.view.weatherlist.WeatherListFragment
@@ -57,18 +58,23 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.apply {
                     beginTransaction()
                         .replace(
-                        R.id.container, WeatherHistoryListFragment()
-                    ).addToBackStack("").commitAllowingStateLoss()
+                            R.id.container, WeatherHistoryListFragment()
+                        ).addToBackStack("").commitAllowingStateLoss()
                 }
                 true
             }
             R.id.menu_contacts -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(
-                            R.id.container, ContentProviderFragment()
-                        ).addToBackStack("").commitAllowingStateLoss()
-                }
+                val fragmentA =
+                    supportFragmentManager.findFragmentByTag(CONTENT_PROVIDER_FRAGMENT_TAG)
+                if (fragmentA == null)
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(
+                                R.id.container,
+                                ContentProviderFragment(),
+                                CONTENT_PROVIDER_FRAGMENT_TAG
+                            ).addToBackStack("").commitAllowingStateLoss()
+                    }
                 true
             }
 
