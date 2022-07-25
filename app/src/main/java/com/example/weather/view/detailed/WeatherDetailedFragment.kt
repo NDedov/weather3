@@ -71,7 +71,7 @@ class WeatherDetailedFragment : Fragment() {
 
         when (detailedAppState) {
             is DetailedAppState.Loading -> {
-                binding.imageCondition.loadGif(R.drawable.loading2)
+                binding.imageCondition.loadGif(R.drawable.loading_grey_round)
             }
             is DetailedAppState.Error -> {
 
@@ -93,7 +93,9 @@ class WeatherDetailedFragment : Fragment() {
                     conditionValue.text = conditionTranslate(weather.condition)
                     cityCoordinates.text =
                         String.format("${weather.city.lat}/${weather.city.lon}")
-                    imageCondition.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg")
+                    imageCondition.loadUrl("https://yastatic.net/weather/i/icons/funky/dark/${weather.icon}.svg",
+                        R.drawable.ic_no_image,
+                        R.drawable.loading_grey_round)
                 }
             }
         }
@@ -111,7 +113,7 @@ class WeatherDetailedFragment : Fragment() {
             .build())
     }
 
-    private fun ImageView.loadUrl(url: String) {
+    private fun ImageView.loadUrl(url: String, errorImage:Int, placeholderImage:Int) {
 
         val imageLoader = ImageLoader.Builder(this.context)
             .componentRegistry { add(SvgDecoder(this@loadUrl.context)) }
@@ -121,6 +123,8 @@ class WeatherDetailedFragment : Fragment() {
             .crossfade(true)
             .crossfade(500)
             .data(url)
+            .error(errorImage)
+            .placeholder(placeholderImage)
             .target(this)
             .build()
 

@@ -25,17 +25,16 @@ class RepositoryDetailedRetrofitImpl : RepositoryWeatherByCity {
             )
         )
         val api = retrofitImpl.build().create(WeatherAPI::class.java)
-        //api.getWeather(BuildConfig.WEATHER_API_KEY,lat,lon).execute() // синхронный запрос
-        api.getWeatherTestRate(BuildConfig.WEATHER_API_KEY, city.lat, city.lon)
+        api.getWeatherYourSite(BuildConfig.WEATHER_API_KEY, city.lat, city.lon)
             .enqueue(object : Callback<WeatherDTO> {
                 override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
-                    // response.raw().request // тут есть информация - а кто же нас вызвал
                     if (response.isSuccessful && response.body() != null) {
-                        callback.onResponse(bindDTOWithCity(response.body()!!,city))
+                        callback.onResponse(bindDTOWithCity(response.body()!!, city))
                     } else {
                         callback.onError(response.message().toString())
                     }
                 }
+
                 override fun onFailure(call: Call<WeatherDTO>, t: Throwable) {
                     callback.onFailure(t as IOException) //костыль
                 }
