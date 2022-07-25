@@ -8,6 +8,11 @@
 
     <string name="location_permission_title_text">Доступ к локации</string>
     <string name="location_permission_message">Объяснение Объяснение Объяснение Объяснение</string>
+    <string name="contact_permission_title_text">Доступ к контактам</string>
+    <string name="contact_permission_message">Объяснение Объяснение Объяснение Объяснение</string>
     <string name="permission_positive_text">Предоставить доступ</string>
     <string name="permission_negative_text">Не надо</string>
+
+
+
 </resources>

@@ -9,13 +9,13 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.weather.R
 import com.example.weather.databinding.FragmentContentProviderBinding
 import com.example.weather.utils.alertDialogPositiveAction
 
@@ -28,6 +28,8 @@ class ContentProviderFragment : Fragment() {
         get() {
             return _binding!!
         }
+
+    private var numberToCall: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,11 +53,11 @@ class ContentProviderFragment : Fragment() {
             getContacts()
         } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
             context?.alertDialogPositiveAction(
-                "Доступ к контактам",
-                "Объяснение Объяснение Объяснение Объяснение",
-                "Предоставить доступ",
+                getString(R.string.contact_permission_title_text),
+                getString(R.string.contact_permission_message),
+                getString(R.string.permission_positive_text),
                 { permissionRequest(Manifest.permission.READ_CONTACTS, REQUEST_CODE_READ_CONTACTS)},
-                "Не надо"
+                getString(R.string.permission_negative_text)
             )
         } else {
             permissionRequest(Manifest.permission.READ_CONTACTS, REQUEST_CODE_READ_CONTACTS)
@@ -78,7 +80,15 @@ class ContentProviderFragment : Fragment() {
                     && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
                 ) {
                     getContacts()
-                    Log.d("@@@", "Ура")
+                }
+            }
+        }
+        if (requestCode == REQUEST_CODE_CALL) {
+            for (pIndex in permissions.indices) {
+                if (permissions[pIndex] == Manifest.permission.CALL_PHONE
+                    && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    makeCall()
                 }
             }
         }
@@ -114,7 +124,8 @@ class ContentProviderFragment : Fragment() {
                         text = number
                         textSize = 20f
                         setOnClickListener {
-                            makeCall(number)
+                            numberToCall = number
+                            makeCall()
                         }
                     })
                 }
@@ -123,13 +134,13 @@ class ContentProviderFragment : Fragment() {
         cursorWithContacts?.close()
     }
 
-    private fun makeCall(number: String) {
+    private fun makeCall() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CALL_PHONE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$number"))
+            val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:$numberToCall"))
             startActivity(intent)
         } else {
             permissionRequest(Manifest.permission.CALL_PHONE, REQUEST_CODE_CALL)

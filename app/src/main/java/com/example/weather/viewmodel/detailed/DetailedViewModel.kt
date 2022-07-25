@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModel
 import com.example.weather.WeatherApp
 import com.example.weather.domain.City
 import com.example.weather.domain.Weather
-import com.example.weather.model.*
-import com.example.weather.model.retrofit.RepositoryDetailedRetrofitImpl
+import com.example.weather.model.CommonWeatherCallback
+import com.example.weather.model.RepositoryWeatherByCity
+import com.example.weather.model.RepositoryWeatherSave
 import java.io.IOException
 
 class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> = MutableLiveData<DetailedAppState>()) :
