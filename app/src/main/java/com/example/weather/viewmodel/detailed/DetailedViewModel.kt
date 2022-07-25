@@ -16,7 +16,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
     ViewModel() {
 
 
-    lateinit var repositoryLocationToWeather: RepositoryWeatherByCity
+    private lateinit var repositoryLocationToWeather: RepositoryWeatherByCity
     lateinit var repositoryWeatherAddable: RepositoryWeatherSave
 
     fun getLiveData(): MutableLiveData<DetailedAppState> {
@@ -29,48 +29,48 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
         if (isConnection()) {
             repositoryLocationToWeather = when (2) {
                 1 -> {
-                    RepositoryDetailedOkHttpImpl()
+                    WeatherApp.repositoryDetailedOkHttpCommon
                 }
                 2 -> {
-                    RepositoryDetailedRetrofitImpl()
+                    WeatherApp.repositoryDetailedRetrofitCommon
                 }
                 3 -> {
-                    RepositoryDetailedWeatherLoaderImpl()
+                    WeatherApp.repositoryDetailedLoaderCommon
                 }
                 4 -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
                 else -> {
-                    RepositoryDetailedLocalImpl()
+                    WeatherApp.repositoryDetailedLocalCommon
                 }
             }
 
             repositoryWeatherAddable = when (0) {
                 1 -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
                 else -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
             }
         } else {
             repositoryLocationToWeather = when (2) {
                 1 -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
                 2 -> {
-                    RepositoryDetailedLocalImpl()
+                    WeatherApp.repositoryDetailedLocalCommon
                 }
                 else -> {
-                    RepositoryDetailedLocalImpl()
+                    WeatherApp.repositoryDetailedLocalCommon
                 }
             }
             repositoryWeatherAddable = when (0) {
                 1 -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
                 else -> {
-                    RepositoryRoomImpl()
+                    WeatherApp.repositoryDetailedRoomCommon
                 }
             }
         }
@@ -96,7 +96,7 @@ class DetailedViewModel(private val liveData: MutableLiveData<DetailedAppState> 
         }
 
         override fun onError(message: String) {
-            TODO("Not yet implemented")
+            liveData.postValue(DetailedAppState.Error(RuntimeException(message)))
         }
     }
 
