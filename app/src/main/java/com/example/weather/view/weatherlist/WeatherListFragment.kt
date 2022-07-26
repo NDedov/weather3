@@ -139,7 +139,7 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
         requireActivity()
             .supportFragmentManager
             .beginTransaction()
-            .hide(this)
+            .hide(requireActivity().supportFragmentManager.fragments.first())
             .add(
                 R.id.container, WeatherDetailedFragment.newInstance(weather)
             ).addToBackStack("").commit()
