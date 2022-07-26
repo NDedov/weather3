@@ -16,6 +16,7 @@
     <string name="search">Поиск</string>
     <string name="maps_text">Карта</string>
     <string name="marker_text">Marker in Barnaul</string>
+    <string name="city_not_found">Населенный пункт не найден</string>
 
 
 </resources>

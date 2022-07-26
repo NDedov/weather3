@@ -116,10 +116,10 @@ class MapsFragment : Fragment() {
                         setMarker(ln, searchText, R.drawable.ic_map_marker)
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(ln, 15f))
                     }else{
-                        Toast.makeText(requireContext(),"Населенный пункт не найден",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(),getString(R.string.city_not_found),Toast.LENGTH_SHORT).show()
                     }
                 }else{
-                    Toast.makeText(requireContext(),"Населенный пункт не найден",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),getString(R.string.city_not_found),Toast.LENGTH_SHORT).show()
                 }
             }
         }

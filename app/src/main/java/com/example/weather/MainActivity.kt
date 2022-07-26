@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.utils.CONTENT_PROVIDER_FRAGMENT_TAG
+import com.example.weather.utils.MAPS_FRAGMENT_TAG
+import com.example.weather.utils.WEATHER_HISTORY_LIST_FRAGMENT_TAG
 import com.example.weather.view.contentprovider.ContentProviderFragment
 import com.example.weather.view.history.WeatherHistoryListFragment
 import com.example.weather.view.maps.MapsFragment
@@ -56,27 +58,32 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_history -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(
-                            R.id.container, WeatherHistoryListFragment()
-                        ).addToBackStack("").commitAllowingStateLoss()
-                }
+                if (supportFragmentManager.fragments.first().tag != WEATHER_HISTORY_LIST_FRAGMENT_TAG)
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(
+                                R.id.container,
+                                WeatherHistoryListFragment(),
+                                WEATHER_HISTORY_LIST_FRAGMENT_TAG
+                            )
+                            .addToBackStack("").commitAllowingStateLoss()
+                    }
                 true
             }
             R.id.menu_map -> {
-                supportFragmentManager.apply {
-                    beginTransaction()
-                        .replace(
-                            R.id.container, MapsFragment()
-                        ).addToBackStack("").commitAllowingStateLoss()
-                }
+                if (supportFragmentManager.fragments.first().tag != MAPS_FRAGMENT_TAG)
+                    supportFragmentManager.apply {
+                        beginTransaction()
+                            .replace(
+                                R.id.container,
+                                MapsFragment(),
+                                MAPS_FRAGMENT_TAG
+                            ).addToBackStack("").commitAllowingStateLoss()
+                    }
                 true
             }
             R.id.menu_contacts -> {
-                val fragmentA =
-                    supportFragmentManager.findFragmentByTag(CONTENT_PROVIDER_FRAGMENT_TAG)
-                if (fragmentA == null)
+                if (supportFragmentManager.fragments.first().tag != CONTENT_PROVIDER_FRAGMENT_TAG)
                     supportFragmentManager.apply {
                         beginTransaction()
                             .replace(
