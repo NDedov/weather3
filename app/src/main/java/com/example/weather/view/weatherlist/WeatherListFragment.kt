@@ -3,6 +3,8 @@ package com.example.weather.view.weatherlist
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentWeatherListBinding
+import com.example.weather.domain.City
 import com.example.weather.domain.Weather
 import com.example.weather.model.Location
 import com.example.weather.utils.*
@@ -22,6 +25,7 @@ import com.example.weather.view.detailed.OnWeatherListItemClick
 import com.example.weather.view.detailed.WeatherDetailedFragment
 import com.example.weather.viewmodel.citylist.CityListAppState
 import com.example.weather.viewmodel.citylist.CityListViewModel
+import java.util.*
 
 const val REQUEST_CODE_LOCATION = 997
 
@@ -38,6 +42,8 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
             return _binding!!
         }
     private lateinit var viewModel: CityListViewModel
+
+    lateinit var locationManager: LocationManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -129,6 +135,7 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
     }
 
     override fun onItemClick(weather: Weather) {
+        locationManager.removeUpdates(locationListener)
         requireActivity()
             .supportFragmentManager
             .beginTransaction()
@@ -144,18 +151,59 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val locationManager =
+            locationManager =
                 requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     2000L,
-                    0F
-                ) { location -> Log.d("@@@", "${location.latitude} ${location.longitude}") }
+                    0F,
+                    locationListener
+                )
+            } else {
+                val providers = locationManager.getProviders(false)
+                providers.forEach {
+                    val lastLocation = locationManager.getLastKnownLocation(it)
+                    if (lastLocation != null) {
+                        getAddress(location = lastLocation)
+                    }
+                }
             }
         }
     }
 
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: android.location.Location) {
+            Log.d("@@@", "${location.latitude} ${location.longitude}")
+            getAddress(location)
+        }
+
+        override fun onProviderDisabled(provider: String) {
+            Log.d("@@@", "onProviderDisabled")
+            super.onProviderDisabled(provider)
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            Log.d("@@@", "onProviderEnabled")
+            super.onProviderEnabled(provider)
+        }
+    }
+
+    fun getAddress(location: android.location.Location) {
+        val geocoder = Geocoder(context, Locale("ru_RU"))
+        Thread {
+            val address = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            onItemClick(
+                Weather(
+                    City(
+                        address.first().locality,
+                        location.latitude,
+                        location.longitude
+                    )
+                )
+            )
+        }.start()
+    }
 
     private fun permissionRequest(permission: String) {
         requestPermissions(arrayOf(permission), REQUEST_CODE_LOCATION)
