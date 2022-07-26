@@ -108,12 +108,16 @@ class MapsFragment : Fragment() {
 
         binding.buttonSearch.setOnClickListener {
             binding.searchAddress.text.toString().let { searchText ->
-                val geocoder = Geocoder(requireContext())
-                val result = geocoder.getFromLocationName(searchText, 1)
-                if (result.isNotEmpty()){
-                    val ln = LatLng(result.first().latitude, result.first().longitude)
-                    setMarker(ln, searchText, R.drawable.ic_map_marker)
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(ln, 15f))
+                if (searchText != ""){
+                    val geocoder = Geocoder(requireContext())
+                    val result = geocoder.getFromLocationName(searchText, 1)
+                    if (result.isNotEmpty()){
+                        val ln = LatLng(result.first().latitude, result.first().longitude)
+                        setMarker(ln, searchText, R.drawable.ic_map_marker)
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(ln, 15f))
+                    }else{
+                        Toast.makeText(requireContext(),"Населенный пункт не найден",Toast.LENGTH_SHORT).show()
+                    }
                 }else{
                     Toast.makeText(requireContext(),"Населенный пункт не найден",Toast.LENGTH_SHORT).show()
                 }
