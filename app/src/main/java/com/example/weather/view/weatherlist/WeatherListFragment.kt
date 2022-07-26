@@ -27,8 +27,6 @@ import com.example.weather.viewmodel.citylist.CityListAppState
 import com.example.weather.viewmodel.citylist.CityListViewModel
 import java.util.*
 
-const val REQUEST_CODE_LOCATION = 997
-
 class WeatherListFragment : Fragment(), OnWeatherListItemClick {
 
     companion object {
@@ -135,7 +133,9 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
     }
 
     override fun onItemClick(weather: Weather) {
-        locationManager.removeUpdates(locationListener)
+        if (this::locationManager.isInitialized)
+            locationManager.removeUpdates(locationListener)
+
         requireActivity()
             .supportFragmentManager
             .beginTransaction()
@@ -156,7 +156,7 @@ class WeatherListFragment : Fragment(), OnWeatherListItemClick {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    2000L,
+                    20000L,
                     0F,
                     locationListener
                 )

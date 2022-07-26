@@ -17,10 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.weather.R
 import com.example.weather.databinding.FragmentContentProviderBinding
+import com.example.weather.utils.REQUEST_CODE_CALL
+import com.example.weather.utils.REQUEST_CODE_READ_CONTACTS
 import com.example.weather.utils.alertDialogPositiveAction
-
-const val REQUEST_CODE_READ_CONTACTS = 999
-const val REQUEST_CODE_CALL = 998
 
 class ContentProviderFragment : Fragment() {
     private var _binding: FragmentContentProviderBinding? = null
@@ -62,7 +61,6 @@ class ContentProviderFragment : Fragment() {
         } else {
             permissionRequest(Manifest.permission.READ_CONTACTS, REQUEST_CODE_READ_CONTACTS)
         }
-
     }
 
     private fun permissionRequest(permission: String, requestCode: Int) {

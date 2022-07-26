@@ -7,9 +7,14 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/menu_map"
+        android:title="@string/maps_text"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_contacts"
         android:title="@string/contacts_text"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 
 </menu>

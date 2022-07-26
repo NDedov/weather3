@@ -24,6 +24,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC4Q7OtEFPeHIh5GARicSvXNTMEJ7g0Dfk" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

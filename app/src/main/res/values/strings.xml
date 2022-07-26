@@ -12,7 +12,10 @@
     <string name="contact_permission_message">Объяснение Объяснение Объяснение Объяснение</string>
     <string name="permission_positive_text">Предоставить доступ</string>
     <string name="permission_negative_text">Не надо</string>
-
+    <string name="search_text_hint">Населенный пункт…</string>
+    <string name="search">Поиск</string>
+    <string name="maps_text">Карта</string>
+    <string name="marker_text">Marker in Barnaul</string>
 
 
 </resources>

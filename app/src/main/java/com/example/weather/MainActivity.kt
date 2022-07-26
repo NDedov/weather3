@@ -14,6 +14,7 @@ import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.utils.CONTENT_PROVIDER_FRAGMENT_TAG
 import com.example.weather.view.contentprovider.ContentProviderFragment
 import com.example.weather.view.history.WeatherHistoryListFragment
+import com.example.weather.view.maps.MapsFragment
 import com.example.weather.view.weatherlist.WeatherListFragment
 
 class MainActivity : AppCompatActivity() {
@@ -59,6 +60,15 @@ class MainActivity : AppCompatActivity() {
                     beginTransaction()
                         .replace(
                             R.id.container, WeatherHistoryListFragment()
+                        ).addToBackStack("").commitAllowingStateLoss()
+                }
+                true
+            }
+            R.id.menu_map -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .replace(
+                            R.id.container, MapsFragment()
                         ).addToBackStack("").commitAllowingStateLoss()
                 }
                 true
