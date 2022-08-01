@@ -1,8 +1,5 @@
 package com.example.weather.utils
 
-import com.example.weather.R
-import com.example.weather.view.maps.MapsFragment
-
 const val YANDEX_API_KEY = "X-Yandex-API-Key"
 
 const val SP_DB_LOCATION = "SP_DB_LOCATION"
@@ -23,3 +20,14 @@ const val MAPS_FRAGMENT_TAG = "MAPS_FRAGMENT_TAG"
 const val REQUEST_CODE_LOCATION = 997
 const val REQUEST_CODE_READ_CONTACTS = 999
 const val REQUEST_CODE_CALL = 998
+
+
+/**********
+FCM
+ ********/
+const val CHANNEL_HIGH_ID = "channel_we3tw43"
+const val NOTIFICATION_ID1 = 1
+
+const val NOTIFICATION_KEY_TITLE = "myTitle"
+const val NOTIFICATION_KEY_BODY = "myBody"
+/**********/

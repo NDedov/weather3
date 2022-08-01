@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -47,8 +48,13 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.9'
 
+    //FCM
+    //implementation platform('com.google.firebase:firebase-bom:30.3.0')
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.6'
+
     //googleMaps
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
 
     //room
     apply plugin: 'kotlin-kapt'
