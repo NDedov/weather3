@@ -29,8 +29,37 @@ android {
         it.buildConfigField "String", "WEATHER_API_KEY", apiKey
     }
 
-    buildTypes {
+    signingConfigs {
+        top_secret {
+            Properties properties = new Properties()
+            properties.load(rootProject.file("password_top_secret.properties").newDataInputStream())
+            def password = properties.getProperty("password") // FIXME
+            storeFile file("top_secret.jks")
+            storePassword = password
+            keyAlias 'ndedov'
+            keyPassword =password
+        }
+
         release {
+            Properties properties = new Properties()
+            properties.load(rootProject.file("password_release.properties").newDataInputStream())
+            def password = properties.getProperty("password")
+            storeFile file("release.jks")
+            storePassword = password
+            keyAlias 'ndedov'
+            keyPassword =password
+        }
+    }
+
+    buildTypes {
+
+        top_secret {
+            signingConfig = signingConfigs.top_secret
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            signingConfig = signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
