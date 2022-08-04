@@ -1,12 +1,11 @@
 package com.example.weather.model.retrofit
 
-import com.example.weather.BuildConfig
 import com.example.weather.domain.City
 import com.example.weather.model.CommonWeatherCallback
 import com.example.weather.model.DTO.WeatherDTO
 import com.example.weather.model.RepositoryWeatherByCity
+import com.example.weather.utils.BuildConfig_WEATHER_API_KEY
 import com.example.weather.utils.bindDTOWithCity
-
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,7 +24,7 @@ class RepositoryDetailedRetrofitImpl : RepositoryWeatherByCity {
             )
         )
         val api = retrofitImpl.build().create(WeatherAPI::class.java)
-        api.getWeatherYourSite(BuildConfig.WEATHER_API_KEY, city.lat, city.lon)
+        api.getWeatherYourSite(BuildConfig_WEATHER_API_KEY, city.lat, city.lon)
             .enqueue(object : Callback<WeatherDTO> {
                 override fun onResponse(call: Call<WeatherDTO>, response: Response<WeatherDTO>) {
                     if (response.isSuccessful && response.body() != null) {

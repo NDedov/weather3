@@ -31,3 +31,5 @@ const val NOTIFICATION_ID1 = 1
 const val NOTIFICATION_KEY_TITLE = "myTitle"
 const val NOTIFICATION_KEY_BODY = "myBody"
 /**********/
+
+const val BuildConfig_WEATHER_API_KEY = "9d8f52b7-e22d-45fe-b38a-505e9c40b6f3"

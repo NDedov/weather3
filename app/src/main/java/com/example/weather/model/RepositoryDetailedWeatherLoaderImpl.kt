@@ -3,9 +3,9 @@ package com.example.weather.model
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.weather.BuildConfig
 import com.example.weather.domain.City
 import com.example.weather.model.DTO.WeatherDTO
+import com.example.weather.utils.BuildConfig_WEATHER_API_KEY
 import com.example.weather.utils.YANDEX_API_KEY
 import com.example.weather.utils.bindDTOWithCity
 import com.example.weather.utils.getLines
@@ -27,7 +27,7 @@ class RepositoryDetailedWeatherLoaderImpl : RepositoryWeatherByCity {
             myConnection.readTimeout = 5000
             myConnection.addRequestProperty(
                 YANDEX_API_KEY,
-                BuildConfig.WEATHER_API_KEY
+                BuildConfig_WEATHER_API_KEY
             )
 
             try {

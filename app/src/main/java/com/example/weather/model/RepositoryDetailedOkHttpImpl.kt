@@ -1,8 +1,8 @@
 package com.example.weather.model
 
-import com.example.weather.BuildConfig
 import com.example.weather.domain.City
 import com.example.weather.model.DTO.WeatherDTO
+import com.example.weather.utils.BuildConfig_WEATHER_API_KEY
 import com.example.weather.utils.YANDEX_API_KEY
 import com.example.weather.utils.bindDTOWithCity
 import com.google.gson.Gson
@@ -13,7 +13,7 @@ class RepositoryDetailedOkHttpImpl : RepositoryWeatherByCity {
     override fun getWeather(city: City, callback: CommonWeatherCallback) {
         val client = OkHttpClient()
         val builder = Request.Builder()
-        builder.addHeader(YANDEX_API_KEY, BuildConfig.WEATHER_API_KEY)
+        builder.addHeader(YANDEX_API_KEY, BuildConfig_WEATHER_API_KEY)
         builder.url("https://api.weather.yandex.ru/v2/informers?lat=${city.lat}&lon=${city.lon}")
         val request: Request = builder.build()
         val call: Call = client.newCall(request)

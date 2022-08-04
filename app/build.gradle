@@ -22,18 +22,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes.each {
+ /*   buildTypes.each {
         Properties properties = new Properties()
         properties.load(project.rootProject.file("apikey.properties").newDataInputStream())
         def apiKey  = properties.getProperty("yandex_weather_api_key", "")
         it.buildConfigField "String", "WEATHER_API_KEY", apiKey
-    }
+    }*/
 
     signingConfigs {
         top_secret {
             Properties properties = new Properties()
             properties.load(rootProject.file("password_top_secret.properties").newDataInputStream())
-            def password = properties.getProperty("password") // FIXME
+            def password = properties.getProperty("password")
             storeFile file("top_secret.jks")
             storePassword = password
             keyAlias 'ndedov'
@@ -60,7 +60,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -71,6 +71,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    flavorDimensions 'FREE', 'FORME'
 }
 
 dependencies {
