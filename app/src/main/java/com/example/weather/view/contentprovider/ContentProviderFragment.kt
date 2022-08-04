@@ -55,7 +55,12 @@ class ContentProviderFragment : Fragment() {
                 getString(R.string.contact_permission_title_text),
                 getString(R.string.contact_permission_message),
                 getString(R.string.permission_positive_text),
-                { permissionRequest(Manifest.permission.READ_CONTACTS, REQUEST_CODE_READ_CONTACTS)},
+                {
+                    permissionRequest(
+                        Manifest.permission.READ_CONTACTS,
+                        REQUEST_CODE_READ_CONTACTS
+                    )
+                },
                 getString(R.string.permission_negative_text)
             )
         } else {
@@ -73,24 +78,35 @@ class ContentProviderFragment : Fragment() {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_READ_CONTACTS) {
-            for (pIndex in permissions.indices) {
-                if (permissions[pIndex] == Manifest.permission.READ_CONTACTS
-                    && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    getContacts()
-                }
-            }
+            actionForPermission(
+                permissions,
+                Manifest.permission.READ_CONTACTS,
+                grantResults
+            ) { getContacts() }
         }
         if (requestCode == REQUEST_CODE_CALL) {
-            for (pIndex in permissions.indices) {
-                if (permissions[pIndex] == Manifest.permission.CALL_PHONE
-                    && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    makeCall()
-                }
-            }
+            actionForPermission(
+                permissions,
+                Manifest.permission.CALL_PHONE,
+                grantResults
+            ) { makeCall() }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun actionForPermission(
+        permissions: Array<out String>,
+        permission: String,
+        grantResults: IntArray,
+        action: () -> Unit
+    ) {
+        for (pIndex in permissions.indices) {
+            if (permissions[pIndex] == permission
+                && grantResults[pIndex] == PackageManager.PERMISSION_GRANTED
+            ) {
+                action.invoke()
+            }
+        }
     }
 
     @SuppressLint("Range")

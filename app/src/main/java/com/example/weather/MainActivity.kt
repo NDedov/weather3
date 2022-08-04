@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.utils.CONTENT_PROVIDER_FRAGMENT_TAG
 import com.example.weather.utils.MAPS_FRAGMENT_TAG
@@ -56,46 +57,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
             R.id.menu_history -> {
                 if (supportFragmentManager.fragments.first().tag != WEATHER_HISTORY_LIST_FRAGMENT_TAG)
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(
-                                R.id.container,
-                                WeatherHistoryListFragment(),
-                                WEATHER_HISTORY_LIST_FRAGMENT_TAG
-                            )
-                            .addToBackStack("").commitAllowingStateLoss()
-                    }
-                true
+                    showFragment(WeatherHistoryListFragment())
             }
             R.id.menu_map -> {
                 if (supportFragmentManager.fragments.first().tag != MAPS_FRAGMENT_TAG)
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(
-                                R.id.container,
-                                MapsFragment(),
-                                MAPS_FRAGMENT_TAG
-                            ).addToBackStack("").commitAllowingStateLoss()
-                    }
-                true
+                    showFragment(MapsFragment())
             }
             R.id.menu_contacts -> {
                 if (supportFragmentManager.fragments.first().tag != CONTENT_PROVIDER_FRAGMENT_TAG)
-                    supportFragmentManager.apply {
-                        beginTransaction()
-                            .replace(
-                                R.id.container,
-                                ContentProviderFragment(),
-                                CONTENT_PROVIDER_FRAGMENT_TAG
-                            ).addToBackStack("").commitAllowingStateLoss()
-                    }
-                true
+                    showFragment(ContentProviderFragment())
             }
-
             else -> super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.apply {
+            beginTransaction()
+                .replace(
+                    R.id.container,
+                    fragment,
+                    WEATHER_HISTORY_LIST_FRAGMENT_TAG
+                )
+                .addToBackStack("").commitAllowingStateLoss()
         }
     }
 }
