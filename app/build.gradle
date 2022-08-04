@@ -71,7 +71,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    flavorDimensions 'FREE', 'FORME'
+    flavorDimensions 'version'
+    productFlavors {
+        FOR_ME {
+            dimension 'version'
+        }
+        FREE {
+            dimension 'version'
+        }
+    }
 }
 
 dependencies {
